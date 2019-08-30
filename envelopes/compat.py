@@ -19,11 +19,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-
+import re
 import sys
 from email import utils
 
 SEMISPACE = "; "
+tspecials = re.compile(r'[ \(\)<>@,;:\\"/\[\]\?=]')
 
 
 def encoded(_str, coding):
