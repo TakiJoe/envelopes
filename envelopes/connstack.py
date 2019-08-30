@@ -34,6 +34,7 @@ This module implements SMTP connection stack management.
 """
 
 from contextlib import contextmanager
+
 from .local import LocalStack, release_local
 
 

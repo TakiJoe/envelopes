@@ -22,6 +22,7 @@
 #
 
 import codecs
+
 from setuptools import setup
 
 import envelopes

@@ -20,14 +20,11 @@
 # THE SOFTWARE.
 #
 
-import sys
-
-sys.path = ["."] + sys.path
-
-from envelopes import Envelope, SMTP
-import envelopes.connstack
-from flask import Flask, jsonify
 import os
+
+import envelopes.connstack
+from envelopes import SMTP, Envelope
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 app.config["DEBUG"] = True

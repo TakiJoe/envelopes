@@ -27,19 +27,20 @@ This module contains test suite for the *Envelope* class.
 """
 
 import base64
-from email.header import Header
 import io
 import os
 import sys
+from email.header import Header
+
+from envelopes.compat import encoded
+from envelopes.envelope import Envelope, MessageEncodeError
+from lib.testing import BaseTestCase
 
 try:
     from urllib.parse import quote
 except ImportError:
     from urllib import quote
 
-from envelopes.envelope import Envelope, MessageEncodeError
-from envelopes.compat import encoded
-from lib.testing import BaseTestCase
 
 LOREM = "Lorem ipsum".encode("utf-8")
 

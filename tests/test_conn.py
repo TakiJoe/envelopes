@@ -26,10 +26,11 @@ test_conn
 This module contains test suite for the *SMTP* class.
 """
 
+from smtplib import SMTP_PORT, SMTP_SSL_PORT
+
 from envelopes.conn import SMTP
 from envelopes.envelope import Envelope
 from lib.testing import BaseTestCase
-from smtplib import SMTP_PORT, SMTP_SSL_PORT
 
 
 class Test_SMTPConnection(BaseTestCase):

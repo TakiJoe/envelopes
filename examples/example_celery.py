@@ -21,9 +21,6 @@
 #
 
 import os
-import sys
-
-sys.path = ["."] + sys.path
 
 from celery import Celery
 from envelopes import Envelope

@@ -27,7 +27,18 @@ This module contains the Envelope class.
 """
 
 import io
+import mimetypes
+import os
+import re
 import sys
+from email.header import Header
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+from .compat import add_header as compat_add_header
+from .compat import encoded
+from .conn import SMTP
 
 if sys.version_info[0] == 2:
     from email import Encoders as email_encoders
@@ -45,18 +56,6 @@ else:
         "Unsupported Python version: %d.%d.%d"
         % (sys.version_info[0], sys.version_info[1], sys.version_info[2])
     )
-
-from email.header import Header
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import mimetypes
-import os
-import re
-
-from .conn import SMTP
-from .compat import encoded
-from .compat import add_header as compat_add_header
 
 
 class MessageEncodeError(Exception):
