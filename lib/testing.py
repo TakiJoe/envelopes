@@ -29,6 +29,7 @@ Various utilities used in testing.
 import os
 import smtplib
 import tempfile
+import unittest
 
 HTML_BODY = u"""<html>
 <head></head>
@@ -145,7 +146,7 @@ class MockSMTPSSL(MockSMTP):
     default_port = smtplib.SMTP_SSL_PORT
 
 
-class BaseTestCase(object):
+class BaseTestCase(unittest.TestCase):
     """Base class for Envelopes test cases."""
 
     @classmethod

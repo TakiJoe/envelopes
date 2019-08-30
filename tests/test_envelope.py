@@ -26,10 +26,8 @@ test_envelope
 This module contains test suite for the *Envelope* class.
 """
 
-import base64
 import io
 import os
-import sys
 from email.header import Header
 
 from envelopes.compat import encoded
