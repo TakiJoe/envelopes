@@ -23,8 +23,8 @@ jobs:
     - name: Check with pyflakes
       run: |
         pip install pyflakes
-        python3 -m pyflakes
+        python -m pyflakes
     - name: Test with pytest
       run: |
         pip install pytest
-        pytest
+        python -m pytest
