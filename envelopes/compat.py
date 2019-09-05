@@ -23,7 +23,7 @@
 import sys
 from email import utils
 
-SEMISPACE = '; '
+SEMISPACE = "; "
 
 
 def encoded(_str, coding):
@@ -52,22 +52,22 @@ def _py2_formatparam(param, value=None, quote=True):
         # instance.  RFC 2231 encoded values are never quoted, per RFC.
         if isinstance(value, tuple):
             # Encode as per RFC 2231
-            param += '*'
+            param += "*"
             value = utils.encode_rfc2231(value[2], value[0], value[1])
-            return '%s=%s' % (param, value)
+            return "%s=%s" % (param, value)
         else:
             try:
-                value.encode('ascii')
+                value.encode("ascii")
             except UnicodeEncodeError:
-                param += '*'
-                value = utils.encode_rfc2231(value, 'utf-8', '')
-                return '%s=%s' % (param, value)
+                param += "*"
+                value = utils.encode_rfc2231(value, "utf-8", "")
+                return "%s=%s" % (param, value)
         # BAW: Please check this.  I think that if quote is set it should
         # force quoting even if not necessary.
         if quote or tspecials.search(value):
             return '%s="%s"' % (param, utils.quote(value))
         else:
-            return '%s=%s' % (param, value)
+            return "%s=%s" % (param, value)
     else:
         return param
 
@@ -95,9 +95,9 @@ def _py2_add_header(msg_part, _name, _value, **_params):
     parts = []
     for k, v in _params.items():
         if v is None:
-            parts.append(k.replace('_', '-'))
+            parts.append(k.replace("_", "-"))
         else:
-            parts.append(_py2_formatparam(k.replace('_', '-'), v))
+            parts.append(_py2_formatparam(k.replace("_", "-"), v))
     if _value is not None:
         parts.insert(0, _value)
     msg_part._headers.append((_name, SEMISPACE.join(parts)))

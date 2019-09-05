@@ -33,13 +33,18 @@ if sys.version_info[0] == 2:
     from email import Encoders as email_encoders
 elif sys.version_info[0] == 3:
     from email import encoders as email_encoders
+
     basestring = str
 
     def unicode(_str, _charset):
         return str(_str.encode(_charset), _charset)
+
+
 else:
-    raise RuntimeError('Unsupported Python version: %d.%d.%d' % (
-        sys.version_info[0], sys.version_info[1], sys.version_info[2]))
+    raise RuntimeError(
+        "Unsupported Python version: %d.%d.%d"
+        % (sys.version_info[0], sys.version_info[1], sys.version_info[2])
+    )
 
 from email.header import Header
 from email.mime.base import MIMEBase
@@ -87,20 +92,22 @@ class Envelope(object):
     :param charset: message charset
     """
 
-    ADDR_FORMAT = '%s <%s>'
-    ADDR_REGEXP = re.compile(r'^(.*) <([^@]+@[^@]+)>$')
+    ADDR_FORMAT = "%s <%s>"
+    ADDR_REGEXP = re.compile(r"^(.*) <([^@]+@[^@]+)>$")
 
-    def __init__(self,
-                 to_addr=None,
-                 from_addr=None,
-                 subject=None,
-                 html_body=None,
-                 text_body=None,
-                 cc_addr=None,
-                 bcc_addr=None,
-                 reply_to_addr=None,
-                 headers=None,
-                 charset='utf-8'):
+    def __init__(
+        self,
+        to_addr=None,
+        from_addr=None,
+        subject=None,
+        html_body=None,
+        text_body=None,
+        cc_addr=None,
+        bcc_addr=None,
+        reply_to_addr=None,
+        headers=None,
+        charset="utf-8",
+    ):
         def translate(arg):
             """ Creates a list from the argument. """
             if arg:
@@ -118,10 +125,10 @@ class Envelope(object):
         self._parts = []
 
         if text_body:
-            self._parts.append(('text/plain', text_body, charset))
+            self._parts.append(("text/plain", text_body, charset))
 
         if html_body:
-            self._parts.append(('text/html', html_body, charset))
+            self._parts.append(("text/html", html_body, charset))
 
         if headers:
             self._headers = headers
@@ -135,7 +142,9 @@ class Envelope(object):
     def __repr__(self):
         return u'<Envelope from="%s" to="%s" subject="%s">' % (
             self._addrs_to_header([self._from]),
-            self._addrs_to_header(self._to), self._subject)
+            self._addrs_to_header(self._to),
+            self._subject,
+        )
 
     @property
     def to_addr(self):
@@ -209,11 +218,13 @@ class Envelope(object):
         self._addr_format = unicode(self.ADDR_FORMAT, charset)
 
     def _addr_tuple_to_addr(self, addr_tuple):
-        addr = ''
+        addr = ""
 
         if len(addr_tuple) == 2 and addr_tuple[1]:
-            addr = self._addr_format % (self._header(addr_tuple[1] or ''),
-                                        addr_tuple[0] or '')
+            addr = self._addr_format % (
+                self._header(addr_tuple[1] or ""),
+                addr_tuple[0] or "",
+            )
         elif addr_tuple[0]:
             addr = addr_tuple[0]
 
@@ -257,10 +268,9 @@ class Envelope(object):
             elif isinstance(addr, tuple):
                 _addrs.append(self._addr_tuple_to_addr(addr))
             else:
-                self._raise(MessageEncodeError,
-                            '%s is not a valid address' % str(addr))
+                self._raise(MessageEncodeError, "%s is not a valid address" % str(addr))
 
-        _header = ','.join(_addrs)
+        _header = ",".join(_addrs)
         return _header
 
     def _raise(self, exc_class, message):
@@ -280,26 +290,29 @@ class Envelope(object):
     def to_mime_message(self):
         """Returns the envelope as
         :py:class:`email.mime.multipart.MIMEMultipart`."""
-        msg = MIMEMultipart('mixed')
-        msg['Subject'] = self._header(self._subject or '')
+        msg = MIMEMultipart("mixed")
+        msg["Subject"] = self._header(self._subject or "")
 
-        msg['From'] = self._encoded(self._addrs_to_header([self._from]))
-        msg['To'] = self._encoded(self._addrs_to_header(self._to))
+        msg["From"] = self._encoded(self._addrs_to_header([self._from]))
+        msg["To"] = self._encoded(self._addrs_to_header(self._to))
 
         if self._cc:
-            msg['CC'] = self._addrs_to_header(self._cc)
+            msg["CC"] = self._addrs_to_header(self._cc)
 
         if self._reply_to:
-            msg['Reply-To'] = self._addrs_to_header(self._reply_to)
+            msg["Reply-To"] = self._addrs_to_header(self._reply_to)
 
         if self._headers:
             for key, value in self._headers.items():
                 msg[key] = self._header(value)
 
         for part in self._parts:
-            type_maj, type_min = part[0].split('/')
-            if not isinstance(part[1], MIMEBase) and type_maj == 'text' and\
-               type_min in ('html', 'plain'):
+            type_maj, type_min = part[0].split("/")
+            if (
+                not isinstance(part[1], MIMEBase)
+                and type_maj == "text"
+                and type_min in ("html", "plain")
+            ):
                 msg.attach(MIMEText(part[1], type_min, self._charset))
             else:
                 msg.attach(part[1])
@@ -317,9 +330,9 @@ class Envelope(object):
             mimetype, _ = mimetypes.guess_type(file_path)
 
         if mimetype is None:
-            mimetype = 'application/octet-stream'
+            mimetype = "application/octet-stream"
 
-        type_maj, type_min = mimetype.split('/')
+        type_maj, type_min = mimetype.split("/")
 
         def attach_data(part_data):
             part = MIMEBase(type_maj, type_min)
@@ -327,15 +340,17 @@ class Envelope(object):
             email_encoders.encode_base64(part)
 
             part_filename = os.path.basename(self._encoded(file_path))
-            compat_add_header(part,
-                              'Content-Disposition',
-                              'attachment',
-                              filename=("utf-8", None, part_filename))
+            compat_add_header(
+                part,
+                "Content-Disposition",
+                "attachment",
+                filename=("utf-8", None, part_filename),
+            )
 
             self._parts.append((mimetype, part))
 
         if not data:
-            with open(file_path, 'rb') as fh:
+            with open(file_path, "rb") as fh:
                 part_data = fh.read()
                 attach_data(part_data)
         elif isinstance(data, io.IOBase):

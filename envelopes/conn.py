@@ -31,21 +31,22 @@ import socket
 
 TimeoutException = socket.timeout
 
-__all__ = ['SMTP', 'GMailSMTP', 'SendGridSMTP', 'MailcatcherSMTP',
-           'TimeoutException']
+__all__ = ["SMTP", "GMailSMTP", "SendGridSMTP", "MailcatcherSMTP", "TimeoutException"]
 
 
 class SMTP(object):
     """Wrapper around :py:class:`smtplib.SMTP` class."""
 
-    def __init__(self,
-                 host=None,
-                 port=25,
-                 login=None,
-                 password=None,
-                 tls=False,
-                 smtps=False,
-                 timeout=None):
+    def __init__(
+        self,
+        host=None,
+        port=25,
+        login=None,
+        password=None,
+        tls=False,
+        smtps=False,
+        timeout=None,
+    ):
         self._conn = None
         self._host = host
         self._port = port
@@ -76,9 +77,7 @@ class SMTP(object):
             protocol = smtplib.SMTP_SSL if self._smtps else smtplib.SMTP
 
             if self._timeout:
-                self._conn = protocol(self._host,
-                                      self._port,
-                                      timeout=self._timeout)
+                self._conn = protocol(self._host, self._port, timeout=self._timeout)
             else:
                 self._conn = protocol(self._host, self._port)
 
@@ -86,7 +85,7 @@ class SMTP(object):
             self._conn.starttls()
 
         if self._login:
-            self._conn.login(self._login, self._password or '')
+            self._conn.login(self._login, self._password or "")
 
     def send(self, envelope):
         """Sends an *envelope*."""
@@ -94,10 +93,12 @@ class SMTP(object):
             self._connect()
 
         msg = envelope.to_mime_message()
-        to_addrs = [envelope._addrs_to_header([addr])
-                    for addr in envelope._to + envelope._cc + envelope._bcc]
+        to_addrs = [
+            envelope._addrs_to_header([addr])
+            for addr in envelope._to + envelope._cc + envelope._bcc
+        ]
 
-        return self._conn.sendmail(msg['From'], to_addrs, msg.as_string())
+        return self._conn.sendmail(msg["From"], to_addrs, msg.as_string())
 
     def quit(self):
         """Terminate the SMTP session."""
@@ -115,37 +116,40 @@ class SMTP(object):
 class GMailSMTP(SMTP):
     """Subclass of :py:class:`SMTP` preconfigured for GMail SMTP."""
 
-    GMAIL_SMTP_HOST = 'smtp.googlemail.com'
+    GMAIL_SMTP_HOST = "smtp.googlemail.com"
     GMAIL_SMTP_TLS = True
 
     def __init__(self, login=None, password=None):
-        super(GMailSMTP, self).__init__(self.GMAIL_SMTP_HOST,
-                                        tls=self.GMAIL_SMTP_TLS,
-                                        login=login,
-                                        password=password)
+        super(GMailSMTP, self).__init__(
+            self.GMAIL_SMTP_HOST,
+            tls=self.GMAIL_SMTP_TLS,
+            login=login,
+            password=password,
+        )
 
 
 class SendGridSMTP(SMTP):
     """Subclass of :py:class:`SMTP` preconfigured for SendGrid SMTP."""
 
-    SENDGRID_SMTP_HOST = 'smtp.sendgrid.net'
+    SENDGRID_SMTP_HOST = "smtp.sendgrid.net"
     SENDGRID_SMTP_PORT = 587
     SENDGRID_SMTP_TLS = False
 
     def __init__(self, login=None, password=None):
-        super(SendGridSMTP, self).__init__(self.SENDGRID_SMTP_HOST,
-                                           port=self.SENDGRID_SMTP_PORT,
-                                           tls=self.SENDGRID_SMTP_TLS,
-                                           login=login,
-                                           password=password)
+        super(SendGridSMTP, self).__init__(
+            self.SENDGRID_SMTP_HOST,
+            port=self.SENDGRID_SMTP_PORT,
+            tls=self.SENDGRID_SMTP_TLS,
+            login=login,
+            password=password,
+        )
 
 
 class MailcatcherSMTP(SMTP):
     """Subclass of :py:class:`SMTP` preconfigured for local Mailcatcher
     SMTP."""
 
-    MAILCATCHER_SMTP_HOST = 'localhost'
+    MAILCATCHER_SMTP_HOST = "localhost"
 
     def __init__(self, port=1025):
-        super(MailcatcherSMTP, self).__init__(self.MAILCATCHER_SMTP_HOST,
-                                              port=port)
+        super(MailcatcherSMTP, self).__init__(self.MAILCATCHER_SMTP_HOST, port=port)

@@ -49,7 +49,7 @@ class MockSMTP(object):
     does_esmtp = 0
     default_port = smtplib.SMTP_PORT
 
-    def __init__(self, host='', port=0, local_hostname=None, timeout=0):
+    def __init__(self, host="", port=0, local_hostname=None, timeout=0):
         self._host = host
         self._port = port
         self._local_hostname = local_hostname
@@ -68,82 +68,75 @@ class MockSMTP(object):
     def _get_socket(self, port, host, timeout):
         return None
 
-    def connect(self, host='localhost', port=0):
-        self.__append_call('connect', [], dict(host=host, port=port))
+    def connect(self, host="localhost", port=0):
+        self.__append_call("connect", [], dict(host=host, port=port))
 
     def send(self, str):
-        self.__append_call('connect', [str], {})
+        self.__append_call("connect", [str], {})
 
     def putcmd(self, cmd, args=""):
-        self.__append_call('connect', [cmd], dict(args=args))
+        self.__append_call("connect", [cmd], dict(args=args))
 
     def getreply(self):
-        self.__append_call('getreply', [], dict())
+        self.__append_call("getreply", [], dict())
 
     def docmd(self, cmd, args=""):
-        self.__append_call('docmd', [cmd], dict(args=args))
+        self.__append_call("docmd", [cmd], dict(args=args))
 
-    def helo(self, name=''):
-        self.__append_call('helo', [], dict(name=name))
+    def helo(self, name=""):
+        self.__append_call("helo", [], dict(name=name))
 
-    def ehlo(self, name=''):
-        self.__append_call('ehlo', [], dict(name=name))
+    def ehlo(self, name=""):
+        self.__append_call("ehlo", [], dict(name=name))
 
     def has_extn(self, opt):
-        self.__append_call('has_extn', [opt], dict())
+        self.__append_call("has_extn", [opt], dict())
 
-    def help(self, args=''):
-        self.__append_call('help', [], dict(args=args))
+    def help(self, args=""):
+        self.__append_call("help", [], dict(args=args))
 
     def rset(self):
-        self.__append_call('rset', [], dict())
+        self.__append_call("rset", [], dict())
 
     def noop(self):
-        self.__append_call('noop', [], dict())
+        self.__append_call("noop", [], dict())
 
     def mail(self, sender, options=[]):
-        self.__append_call('mail', [sender], dict(options=options))
+        self.__append_call("mail", [sender], dict(options=options))
 
     def rcpt(self, recip, options=[]):
-        self.__append_call('rcpt', [recip], dict(options=options))
+        self.__append_call("rcpt", [recip], dict(options=options))
 
     def data(self, msg):
-        self.__append_call('data', [msg], dict())
+        self.__append_call("data", [msg], dict())
 
     def verify(self, address):
-        self.__append_call('verify', [address], dict())
+        self.__append_call("verify", [address], dict())
 
     vrfy = verify
 
     def expn(self, address):
-        self.__append_call('expn', [address], dict())
+        self.__append_call("expn", [address], dict())
 
     def ehlo_or_helo_if_needed(self):
-        self.__append_call('ehlo_or_helo_if_needed', [], dict())
+        self.__append_call("ehlo_or_helo_if_needed", [], dict())
 
     def login(self, user, password):
-        self.__append_call('login', [user, password], dict())
+        self.__append_call("login", [user, password], dict())
 
     def starttls(self, keyfile=None, certfile=None):
-        self.__append_call('starttls', [],
-                           dict(keyfile=keyfile,
-                                certfile=certfile))
+        self.__append_call("starttls", [], dict(keyfile=keyfile, certfile=certfile))
 
-    def sendmail(self,
-                 from_addr,
-                 to_addrs,
-                 msg,
-                 mail_options=[],
-                 rcpt_options=[]):
+    def sendmail(self, from_addr, to_addrs, msg, mail_options=[], rcpt_options=[]):
         _args = [from_addr, to_addrs, msg]
         _kwargs = dict(mail_options=mail_options, rcpt_options=rcpt_options)
-        self.__append_call('sendmail', _args, _kwargs)
+        self.__append_call("sendmail", _args, _kwargs)
 
     def close(self):
-        self.__append_call('close', [], dict())
+        self.__append_call("close", [], dict())
 
     def quit(self):
-        self.__append_call('quit', [], dict())
+        self.__append_call("quit", [], dict())
 
 
 class MockSMTPSSL(MockSMTP):
@@ -175,36 +168,39 @@ class BaseTestCase(object):
         smtplib.SMTP_SSL = MockSMTPSSL
 
     def _unpatch_smtplib(self):
-        if hasattr(self, '_orig_smtp'):
+        if hasattr(self, "_orig_smtp"):
             smtplib.SMTP = self._orig_smtp
 
-        if hasattr(self, '_orig_smtp_ssl'):
+        if hasattr(self, "_orig_smtp_ssl"):
             smtplib.SMTP_SSL = self._orig_smtp_ssl
 
     def _dummy_message(self):
-        return dict({
-            'to_addr': ('to@example.com', 'Example To'),
-            'from_addr': ('from@example.com', 'Example From'),
-            'subject': "I'm a helicopter!",
-            'html_body': HTML_BODY,
-            'text_body': TEXT_BODY,
-            'cc_addr': [
-                'cc1@example.com', 'Example CC2 <cc2@example.com>',
-                ('cc3@example.com', 'Example CC3')
-            ],
-            'bcc_addr': [
-                'bcc1@example.com', 'Example BCC2 <bcc2@example.com>',
-                ('bcc3@example.com', 'Example BCC3')
-            ],
-            'reply_to_addr': [
-                'replyto1@example.com', 'Reply To2 <replyto2@example.com>',
-                ('replyto3@example.com', 'Reply To3')
-            ],
-            'headers': {
-                'X-Mailer': 'Envelopes by BTHLabs'
-            },
-            'charset': 'utf-8'
-        })
+        return dict(
+            {
+                "to_addr": ("to@example.com", "Example To"),
+                "from_addr": ("from@example.com", "Example From"),
+                "subject": "I'm a helicopter!",
+                "html_body": HTML_BODY,
+                "text_body": TEXT_BODY,
+                "cc_addr": [
+                    "cc1@example.com",
+                    "Example CC2 <cc2@example.com>",
+                    ("cc3@example.com", "Example CC3"),
+                ],
+                "bcc_addr": [
+                    "bcc1@example.com",
+                    "Example BCC2 <bcc2@example.com>",
+                    ("bcc3@example.com", "Example BCC3"),
+                ],
+                "reply_to_addr": [
+                    "replyto1@example.com",
+                    "Reply To2 <replyto2@example.com>",
+                    ("replyto3@example.com", "Reply To3"),
+                ],
+                "headers": {"X-Mailer": "Envelopes by BTHLabs"},
+                "charset": "utf-8",
+            }
+        )
 
     def _tempfile(self, **kwargs):
         fd, path = tempfile.mkstemp(**kwargs)

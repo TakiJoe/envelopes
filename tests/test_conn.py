@@ -37,41 +37,45 @@ class Test_SMTPConnection(BaseTestCase):
         self._patch_smtplib()
 
     def test_constructor(self):
-        conn = SMTP('localhost',
-                    port=587,
-                    login='spam',
-                    password='eggs',
-                    tls=True,
-                    smtps=True,
-                    timeout=10)
+        conn = SMTP(
+            "localhost",
+            port=587,
+            login="spam",
+            password="eggs",
+            tls=True,
+            smtps=True,
+            timeout=10,
+        )
 
         assert conn._conn is None
-        assert conn._host == 'localhost'
+        assert conn._host == "localhost"
         assert conn._port == 587
-        assert conn._login == 'spam'
-        assert conn._password == 'eggs'
+        assert conn._login == "spam"
+        assert conn._password == "eggs"
         assert conn._tls is True
         assert conn._smtps is True
         assert conn._timeout == 10
 
     def test_constructor_all_kwargs(self):
-        conn = SMTP(host='localhost',
-                    port=587,
-                    login='spam',
-                    password='eggs',
-                    tls=True,
-                    smtps=True)
+        conn = SMTP(
+            host="localhost",
+            port=587,
+            login="spam",
+            password="eggs",
+            tls=True,
+            smtps=True,
+        )
 
         assert conn._conn is None
-        assert conn._host == 'localhost'
+        assert conn._host == "localhost"
         assert conn._port == 587
-        assert conn._login == 'spam'
-        assert conn._password == 'eggs'
+        assert conn._login == "spam"
+        assert conn._password == "eggs"
         assert conn._tls is True
         assert conn._smtps is True
 
     def test_connect(self):
-        conn = SMTP('localhost')
+        conn = SMTP("localhost")
         conn._connect()
         assert conn._conn is not None
 
@@ -80,7 +84,7 @@ class Test_SMTPConnection(BaseTestCase):
         assert old_conn == conn._conn
 
     def test_connect_replace_current(self):
-        conn = SMTP('localhost')
+        conn = SMTP("localhost")
         conn._connect()
         assert conn._conn is not None
 
@@ -90,63 +94,63 @@ class Test_SMTPConnection(BaseTestCase):
         assert conn._conn != old_conn
 
     def test_connect_starttls(self):
-        conn = SMTP('localhost', tls=False)
+        conn = SMTP("localhost", tls=False)
         conn._connect()
         assert conn._conn is not None
-        assert len(conn._conn._call_stack.get('starttls', [])) == 0
+        assert len(conn._conn._call_stack.get("starttls", [])) == 0
 
-        conn = SMTP('localhost', tls=True)
+        conn = SMTP("localhost", tls=True)
         conn._connect()
         assert conn._conn is not None
-        assert len(conn._conn._call_stack.get('starttls', [])) == 1
+        assert len(conn._conn._call_stack.get("starttls", [])) == 1
 
     def test_connect_smtps(self):
-        conn = SMTP('localhost', smtps=False)
+        conn = SMTP("localhost", smtps=False)
         conn._connect()
         assert conn._conn is not None
         assert conn._conn.default_port == SMTP_PORT
 
-        conn = SMTP('localhost', smtps=True)
+        conn = SMTP("localhost", smtps=True)
         conn._connect()
         assert conn._conn is not None
         assert conn._conn.default_port == SMTP_SSL_PORT
 
     def test_connect_login(self):
-        conn = SMTP('localhost')
+        conn = SMTP("localhost")
         conn._connect()
         assert conn._conn is not None
-        assert len(conn._conn._call_stack.get('login', [])) == 0
+        assert len(conn._conn._call_stack.get("login", [])) == 0
 
-        conn = SMTP('localhost', login='spam')
+        conn = SMTP("localhost", login="spam")
         conn._connect()
         assert conn._conn is not None
-        assert len(conn._conn._call_stack.get('login', [])) == 1
+        assert len(conn._conn._call_stack.get("login", [])) == 1
 
-        call_args = conn._conn._call_stack['login'][0][0]
+        call_args = conn._conn._call_stack["login"][0][0]
         assert len(call_args) == 2
         assert call_args[0] == conn._login
-        assert call_args[1] == ''
+        assert call_args[1] == ""
 
-        conn = SMTP('localhost', login='spam', password='eggs')
+        conn = SMTP("localhost", login="spam", password="eggs")
         conn._connect()
         assert conn._conn is not None
-        assert len(conn._conn._call_stack.get('login', [])) == 1
+        assert len(conn._conn._call_stack.get("login", [])) == 1
 
-        call_args = conn._conn._call_stack['login'][0][0]
+        call_args = conn._conn._call_stack["login"][0][0]
         assert len(call_args) == 2
         assert call_args[0] == conn._login
         assert call_args[1] == conn._password
 
     def test_is_connected(self):
-        conn = SMTP('localhost')
+        conn = SMTP("localhost")
         assert conn.is_connected is False
 
         conn._connect()
         assert conn.is_connected is True
-        assert len(conn._conn._call_stack.get('noop', [])) == 1
+        assert len(conn._conn._call_stack.get("noop", [])) == 1
 
     def test_send(self):
-        conn = SMTP('localhost')
+        conn = SMTP("localhost")
 
         msg = self._dummy_message()
         envelope = Envelope(**msg)
@@ -154,13 +158,13 @@ class Test_SMTPConnection(BaseTestCase):
 
         conn.send(envelope)
         assert conn._conn is not None
-        assert len(conn._conn._call_stack.get('sendmail', [])) == 1
+        assert len(conn._conn._call_stack.get("sendmail", [])) == 1
 
-        call_args = conn._conn._call_stack['sendmail'][0][0]
+        call_args = conn._conn._call_stack["sendmail"][0][0]
         assert len(call_args) == 3
-        assert call_args[0] == mime_msg['From']
+        assert call_args[0] == mime_msg["From"]
         assert call_args[1] == [
             envelope._addrs_to_header([addr])
             for addr in envelope._to + envelope._cc + envelope._bcc
         ]
-        assert call_args[2] != ''
+        assert call_args[2] != ""

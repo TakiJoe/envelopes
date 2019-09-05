@@ -26,30 +26,28 @@ from setuptools import setup
 
 import envelopes
 
-desc_file = codecs.open('README.rst', 'r', 'utf-8')
+desc_file = codecs.open("README.rst", "r", "utf-8")
 long_description = desc_file.read()
 desc_file.close()
 
 setup(
     name="Envelopes",
     version=envelopes.__version__,
-    packages=['envelopes'],
-    test_suite='nose.collector',
+    packages=["envelopes"],
+    test_suite="nose.collector",
     zip_safe=False,
-    platforms='any',
-    tests_require=[
-        'nose',
-    ],
-    author=u'Tomasz Wójcik'.encode('utf-8'),
-    author_email='tomek@bthlabs.pl',
-    maintainer=u'Tomasz Wójcik'.encode('utf-8'),
-    maintainer_email='tomek@bthlabs.pl',
-    url='http://tomekwojcik.github.io/envelopes/',
-    download_url='http://github.com/tomekwojcik/envelopes/tarball/v%s' %\
-        envelopes.__version__,
-    description='Mailing for human beings',
+    platforms="any",
+    tests_require=["nose"],
+    author=u"Tomasz Wójcik".encode("utf-8"),
+    author_email="tomek@bthlabs.pl",
+    maintainer=u"Tomasz Wójcik".encode("utf-8"),
+    maintainer_email="tomek@bthlabs.pl",
+    url="http://tomekwojcik.github.io/envelopes/",
+    download_url="http://github.com/tomekwojcik/envelopes/tarball/v%s"
+    % envelopes.__version__,
+    description="Mailing for human beings",
     long_description=long_description,
-    license='https://github.com/tomekwojcik/envelopes/blob/master/LICENSE',
+    license="https://github.com/tomekwojcik/envelopes/blob/master/LICENSE",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Other Environment",
@@ -63,17 +61,10 @@ setup(
         "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
-        "Topic :: Software Development :: Libraries :: Python Modules"
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     extras_require={
-        "build": [
-            "yapf",
-            "pyflakes",
-            "nose",
-            "unittest2",
-        ],
-        "docs": [
-            "sphinx",
-        ]
+        "build": ["yapf", "pyflakes", "nose", "unittest2"],
+        "docs": ["sphinx"],
     },
 )

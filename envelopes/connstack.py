@@ -48,9 +48,10 @@ def Connection(connection):
         yield
     finally:
         popped = pop_connection()
-        assert popped == connection, \
-            'Unexpected SMTP connection was popped off the stack. ' \
-            'Check your SMTP connection setup.'
+        assert popped == connection, (
+            "Unexpected SMTP connection was popped off the stack. "
+            "Check your SMTP connection setup."
+        )
 
 
 def push_connection(connection):
@@ -67,8 +68,9 @@ def use_connection(connection):
     """Clears the stack and uses the given connection.  Protects against mixed
     use of use_connection() and stacked connection contexts.
     """
-    assert len(_connection_stack) <= 1, \
-        'You should not mix Connection contexts with use_connection().'
+    assert (
+        len(_connection_stack) <= 1
+    ), "You should not mix Connection contexts with use_connection()."
     release_local(_connection_stack)
     push_connection(connection)
 
@@ -89,14 +91,16 @@ def resolve_connection(connection=None):
 
     connection = get_current_connection()
     if connection is None:
-        raise NoSMTPConnectionException(
-            'Could not resolve an SMTP connection.')
+        raise NoSMTPConnectionException("Could not resolve an SMTP connection.")
     return connection
 
 
 _connection_stack = LocalStack()
 
 __all__ = [
-    'Connection', 'get_current_connection', 'push_connection',
-    'pop_connection', 'use_connection'
+    "Connection",
+    "get_current_connection",
+    "push_connection",
+    "pop_connection",
+    "use_connection",
 ]
