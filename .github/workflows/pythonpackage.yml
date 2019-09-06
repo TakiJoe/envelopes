@@ -30,4 +30,5 @@ jobs:
         python -m pytest --cov envelopes
     - name: Coverage
       run: |
+        pip install codecov
         codecov --token=7b093993-67a6-4908-a00a-a9652b2e2ab2
