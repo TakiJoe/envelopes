@@ -26,5 +26,8 @@ jobs:
         python -m pyflakes
     - name: Test with pytest
       run: |
-        pip install pytest
-        python -m pytest
+        pip install pytest pytest-cov
+        python -m pytest --cov envelopes
+    - name: Coverage
+      run: |
+        codecov --token=7b093993-67a6-4908-a00a-a9652b2e2ab2
