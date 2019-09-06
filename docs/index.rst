@@ -51,7 +51,6 @@ More examples
     :maxdepth: 2
 
     examples/celery
-    examples/flask
 
 Project status
 --------------
@@ -89,4 +88,3 @@ API Documentation
 
     api/envelope
     api/conn
-    api/connstack
